@@ -1,6 +1,6 @@
 package com.hyundeee.app.findnewusers.presenter
 
-import com.hyundeee.app.findnewusers.data.SearchResponse
+import com.hyundeee.app.findnewusers.model.SearchResponse
 
 interface MainPresenter {
     fun getGithubUserList(q: String)
@@ -8,7 +8,6 @@ interface MainPresenter {
     interface View{
         fun onDataLoaded(storeResponse: SearchResponse)
         fun onDataFailed()
-        fun onDataComplete()
         fun searchGithubUser(searchWord: String)
     }
 }

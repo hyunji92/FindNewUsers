@@ -1,4 +1,4 @@
-package com.hyundeee.app.findnewusers.data
+package com.hyundeee.app.findnewusers.model
 import java.util.*
 
 data class SearchResponse(

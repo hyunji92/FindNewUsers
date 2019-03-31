@@ -1,4 +1,4 @@
-package com.hyundeee.app.findnewusers.data
+package com.hyundeee.app.findnewusers.model
 
 data class User (
         val login: String,

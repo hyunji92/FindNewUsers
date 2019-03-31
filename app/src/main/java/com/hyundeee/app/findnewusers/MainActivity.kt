@@ -6,8 +6,9 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.SearchView
+import android.util.Log
 import android.view.Menu
-import com.hyundeee.app.findnewusers.data.SearchResponse
+import com.hyundeee.app.findnewusers.model.SearchResponse
 import com.hyundeee.app.findnewusers.di.DaggerGithubUserListComponent
 import com.hyundeee.app.findnewusers.di.GithubUserListModule
 import com.hyundeee.app.findnewusers.presenter.MainPresenter
@@ -16,7 +17,6 @@ import com.hyundeee.app.findnewusers.view.RepoFragment
 import com.hyundeee.app.findnewusers.view.UserFragment
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_main.*
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), MainPresenter.View {
@@ -25,21 +25,13 @@ class MainActivity : AppCompatActivity(), MainPresenter.View {
     lateinit var presenter: MainPresenter
     val searchSubject: PublishSubject<String> = PublishSubject.create()
 
-    override fun onDataLoaded(storeResponse: SearchResponse) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun onDataFailed() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun onDataComplete() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
     override fun searchGithubUser(searchWord: String) {
-        if (searchWord.isNullOrBlank()){
-
+        if (searchWord.isNullOrBlank()) {
+            presenter.getGithubUserList("a")
+            userFragment.userAdapter.apply {
+                items.clear()
+                notifyDataSetChanged()
+            }
         } else {
             presenter.getGithubUserList(searchWord)
         }
@@ -73,25 +65,6 @@ class MainActivity : AppCompatActivity(), MainPresenter.View {
         false
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        setSupportActionBar(toolbar)
-
-        searchSubject.debounce(2000, TimeUnit.MILLISECONDS).subscribe { searchGithubUser(it) }
-
-        var component = DaggerGithubUserListComponent.builder()
-                .githubUserListModule(GithubUserListModule(this))
-                .build()
-        component.inject(this)
-
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
-        fragmentManager.beginTransaction().add(R.id.main_container, followersFragment, "3").hide(followersFragment).commit()
-        fragmentManager.beginTransaction().add(R.id.main_container, repoFragment, "2").hide(repoFragment).commit()
-        fragmentManager.beginTransaction().add(R.id.main_container, userFragment, "1").commit()
-
-    }
-
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu, menu)
         val searchView = menu?.findItem(R.id.search_bar)?.actionView as? SearchView
@@ -108,5 +81,37 @@ class MainActivity : AppCompatActivity(), MainPresenter.View {
 
         })
         return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        setSupportActionBar(toolbar)
+
+        var component = DaggerGithubUserListComponent.builder()
+                .githubUserListModule(GithubUserListModule(this))
+                .build()
+        component.inject(this)
+
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+        fragmentManager.beginTransaction().add(R.id.main_container, followersFragment, "3").hide(followersFragment).commit()
+        fragmentManager.beginTransaction().add(R.id.main_container, repoFragment, "2").hide(repoFragment).commit()
+        fragmentManager.beginTransaction().add(R.id.main_container, userFragment, "1").commit()
+    }
+
+    override fun onDataLoaded(storeResponse: SearchResponse) {
+        userFragment.userAdapter.apply {
+            items.clear()
+            items.addAll(storeResponse.items)
+            notifyDataSetChanged()
+        }
+    }
+
+    override fun onDataFailed() {
+        Log.d("test", "onDataFailed ------")
+        userFragment.userAdapter.apply {
+            items.clear()
+            notifyDataSetChanged()
+        }
     }
 }

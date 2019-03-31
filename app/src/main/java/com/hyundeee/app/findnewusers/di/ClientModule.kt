@@ -1,4 +1,4 @@
-package com.hyundeee.app.findnewusers.model
+package com.hyundeee.app.findnewusers.di
 
 import com.hyundeee.app.findnewusers.api.GithubUserApiClient
 import dagger.Module
