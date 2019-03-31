@@ -1,13 +1,19 @@
 package com.hyundeee.app.findnewusers.presenter
 
-import com.hyundeee.app.findnewusers.model.SearchResponse
+import com.hyundeee.app.findnewusers.common.UserData
+import io.reactivex.disposables.CompositeDisposable
 
-interface MainPresenter {
-    fun getGithubUserList(q: String)
+abstract class MainPresenter<U : UserData>   {
 
-    interface View{
-        fun onDataLoaded(storeResponse: SearchResponse)
-        fun onDataFailed()
-        fun searchGithubUser(searchWord: String)
-    }
+    protected var compositeDisposable: CompositeDisposable? = null
+
+    var userData: U? = null
+        set(value) {
+            if (this.userData !== value) {
+                field = value
+                compositeDisposable = CompositeDisposable()
+            }
+        }
+
+    abstract fun getGithubUserList(q: String)
 }

@@ -8,21 +8,21 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.SearchView
 import android.util.Log
 import android.view.Menu
+import com.hyundeee.app.findnewusers.common.UserData
 import com.hyundeee.app.findnewusers.model.SearchResponse
-import com.hyundeee.app.findnewusers.di.DaggerGithubUserListComponent
-import com.hyundeee.app.findnewusers.di.GithubUserListModule
 import com.hyundeee.app.findnewusers.presenter.MainPresenter
+import com.hyundeee.app.findnewusers.presenter.UserDataList
 import com.hyundeee.app.findnewusers.view.FollowersFragment
 import com.hyundeee.app.findnewusers.view.RepoFragment
 import com.hyundeee.app.findnewusers.view.UserFragment
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_main.*
-import javax.inject.Inject
+import org.koin.android.ext.android.inject
 
-class MainActivity : AppCompatActivity(), MainPresenter.View {
+class MainActivity : AppCompatActivity(), UserDataList {
 
-    @Inject
-    lateinit var presenter: MainPresenter
+    private val presenter: MainPresenter<UserData> by inject()
+
     val searchSubject: PublishSubject<String> = PublishSubject.create()
 
     override fun searchGithubUser(searchWord: String) {
@@ -88,15 +88,11 @@ class MainActivity : AppCompatActivity(), MainPresenter.View {
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        var component = DaggerGithubUserListComponent.builder()
-                .githubUserListModule(GithubUserListModule(this))
-                .build()
-        component.inject(this)
-
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
         fragmentManager.beginTransaction().add(R.id.main_container, followersFragment, "3").hide(followersFragment).commit()
         fragmentManager.beginTransaction().add(R.id.main_container, repoFragment, "2").hide(repoFragment).commit()
         fragmentManager.beginTransaction().add(R.id.main_container, userFragment, "1").commit()
+        //presenter.userData = this
     }
 
     override fun onDataLoaded(storeResponse: SearchResponse) {
