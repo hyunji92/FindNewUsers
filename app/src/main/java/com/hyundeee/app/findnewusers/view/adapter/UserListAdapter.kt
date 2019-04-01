@@ -12,11 +12,6 @@ import kotlinx.android.synthetic.main.list_item.view.*
 
 class UserListAdapter(var context: Context?, val items: ArrayList<User>) : RecyclerView.Adapter<UserListAdapter.UserListViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, p1: Int): UserListViewHolder {
-        return UserListViewHolder(LayoutInflater.from(context).inflate(R.layout.list_item, parent, false))
-    }
-
-    override fun getItemCount(): Int = items.size
 
     override fun onBindViewHolder(holder: UserListViewHolder, position: Int) {
         holder.run {
@@ -25,12 +20,17 @@ class UserListAdapter(var context: Context?, val items: ArrayList<User>) : Recyc
             }
         }
     }
+    override fun onCreateViewHolder(parent: ViewGroup, p1: Int): UserListViewHolder {
+        return UserListViewHolder(LayoutInflater.from(context).inflate(R.layout.list_item, parent, false))
+    }
+
+    override fun getItemCount(): Int = items.size
+
 
     inner class UserListViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
 
         fun bindView(userListItem: User) {
             with(view) {
-                user_name.text = userListItem.login
                 user_name.text = userListItem.login
                 user_repo_url.text = userListItem.repos_url
 

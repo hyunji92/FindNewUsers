@@ -1,5 +1,6 @@
 package com.hyundeee.app.findnewusers.presenter
 
+import android.annotation.SuppressLint
 import com.hyundeee.app.findnewusers.api.GithubUserApiClient
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -11,12 +12,27 @@ import javax.inject.Inject
 */
 class MainPresenterImpl @Inject constructor(val view: MainPresenter.View, val client: GithubUserApiClient) : MainPresenter {
 
+    @SuppressLint("CheckResult")
     override fun getGithubUserList(q: String) {
         client.userDataService.getUserData(q, "repositories", "desc")
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({view.onDataLoaded(it)},{view.onDataFailed()})
+                .subscribe({view.onDataLoaded(it)},{view.onDataFailed()},{})
     }
     // 추후 Disposables로 관리 필요
 
 }
+
+/*
+* class MainPresenterImpl @Inject constructor(val view: MainPresenter.View, val client: UserSearchClient) : MainPresenter {
+
+    override fun getUserList(q: String) {
+        client.userListService.getUserList(q, "repositories", "desc")
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ view.onDataLoaded(it) }, { view.onDataFailed() }, { view.onDataComplete() })
+    }
+
+
+
+}*/

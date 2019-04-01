@@ -17,17 +17,17 @@ import com.hyundeee.app.findnewusers.view.RepoFragment
 import com.hyundeee.app.findnewusers.view.UserFragment
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_main.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), MainPresenter.View {
 
     @Inject
     lateinit var presenter: MainPresenter
-    val searchSubject: PublishSubject<String> = PublishSubject.create()
+    //val searchSubject: PublishSubject<String> = PublishSubject.create()
 
     override fun searchGithubUser(searchWord: String) {
         if (searchWord.isNullOrBlank()) {
-            presenter.getGithubUserList("a")
             userFragment.userAdapter.apply {
                 items.clear()
                 notifyDataSetChanged()
@@ -58,7 +58,7 @@ class MainActivity : AppCompatActivity(), MainPresenter.View {
             }
             R.id.navigation_notifications -> {
                 fragmentManager.beginTransaction().hide(active).show(followersFragment).commit()
-                active = userFragment
+                active = followersFragment
                 return@OnNavigationItemSelectedListener true
             }
         }
@@ -70,12 +70,14 @@ class MainActivity : AppCompatActivity(), MainPresenter.View {
         val searchView = menu?.findItem(R.id.search_bar)?.actionView as? SearchView
         searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(s: String?): Boolean {
-                s?.let { searchSubject.onNext(it) }
+                s?.let { searchGithubUser(s) }
                 return false
             }
 
             override fun onQueryTextChange(query: String?): Boolean {
-                query?.let { searchSubject.onNext(it) }
+//                query?.let {
+//                    searchGithubUser(query)
+//                }
                 return false
             }
 
@@ -88,6 +90,8 @@ class MainActivity : AppCompatActivity(), MainPresenter.View {
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
+        //searchSubject.subscribe { searchGithubUser(it) }
+
         var component = DaggerGithubUserListComponent.builder()
                 .githubUserListModule(GithubUserListModule(this))
                 .build()
@@ -98,7 +102,6 @@ class MainActivity : AppCompatActivity(), MainPresenter.View {
         fragmentManager.beginTransaction().add(R.id.main_container, repoFragment, "2").hide(repoFragment).commit()
         fragmentManager.beginTransaction().add(R.id.main_container, userFragment, "1").commit()
     }
-
     override fun onDataLoaded(storeResponse: SearchResponse) {
         userFragment.userAdapter.apply {
             items.clear()
