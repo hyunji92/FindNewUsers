@@ -14,6 +14,5 @@ abstract class MainPresenter<U : UserData>   {
                 compositeDisposable = CompositeDisposable()
             }
         }
-
     abstract fun getGithubUserList(q: String)
 }

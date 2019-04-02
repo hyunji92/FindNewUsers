@@ -11,11 +11,11 @@ import android.view.Menu
 import com.hyundeee.app.findnewusers.common.UserData
 import com.hyundeee.app.findnewusers.model.SearchResponse
 import com.hyundeee.app.findnewusers.presenter.MainPresenter
+import com.hyundeee.app.findnewusers.presenter.MainPresenterImpl
 import com.hyundeee.app.findnewusers.presenter.UserDataList
 import com.hyundeee.app.findnewusers.view.FollowersFragment
 import com.hyundeee.app.findnewusers.view.RepoFragment
 import com.hyundeee.app.findnewusers.view.UserFragment
-import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.android.inject
 
@@ -23,11 +23,8 @@ class MainActivity : AppCompatActivity(), UserDataList {
 
     private val presenter: MainPresenter<UserData> by inject()
 
-    val searchSubject: PublishSubject<String> = PublishSubject.create()
-
     override fun searchGithubUser(searchWord: String) {
         if (searchWord.isNullOrBlank()) {
-            presenter.getGithubUserList("a")
             userFragment.userAdapter.apply {
                 items.clear()
                 notifyDataSetChanged()
@@ -70,12 +67,12 @@ class MainActivity : AppCompatActivity(), UserDataList {
         val searchView = menu?.findItem(R.id.search_bar)?.actionView as? SearchView
         searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(s: String?): Boolean {
-                s?.let { searchSubject.onNext(it) }
+                s?.let { searchGithubUser(s) }
                 return false
             }
 
             override fun onQueryTextChange(query: String?): Boolean {
-                query?.let { searchSubject.onNext(it) }
+                //query?.let { searchGithubUser(query) }
                 return false
             }
 
@@ -87,6 +84,8 @@ class MainActivity : AppCompatActivity(), UserDataList {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
+
+        presenter.userData = this
 
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
         fragmentManager.beginTransaction().add(R.id.main_container, followersFragment, "3").hide(followersFragment).commit()
