@@ -20,19 +20,4 @@ class MainPresenterImpl @Inject constructor(val view: MainPresenter.View, val cl
                 .subscribe({view.onDataLoaded(it)},{view.onDataFailed()},{})
     }
     // 추후 Disposables로 관리 필요
-
 }
-
-/*
-* class MainPresenterImpl @Inject constructor(val view: MainPresenter.View, val client: UserSearchClient) : MainPresenter {
-
-    override fun getUserList(q: String) {
-        client.userListService.getUserList(q, "repositories", "desc")
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ view.onDataLoaded(it) }, { view.onDataFailed() }, { view.onDataComplete() })
-    }
-
-
-
-}*/

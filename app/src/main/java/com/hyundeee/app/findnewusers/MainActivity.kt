@@ -24,7 +24,6 @@ class MainActivity : AppCompatActivity(), MainPresenter.View {
 
     @Inject
     lateinit var presenter: MainPresenter
-    //val searchSubject: PublishSubject<String> = PublishSubject.create()
 
     override fun searchGithubUser(searchWord: String) {
         if (searchWord.isNullOrBlank()) {
@@ -89,8 +88,6 @@ class MainActivity : AppCompatActivity(), MainPresenter.View {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
-
-        //searchSubject.subscribe { searchGithubUser(it) }
 
         var component = DaggerGithubUserListComponent.builder()
                 .githubUserListModule(GithubUserListModule(this))
