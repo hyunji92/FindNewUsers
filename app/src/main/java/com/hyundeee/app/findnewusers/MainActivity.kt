@@ -58,7 +58,7 @@ class MainActivity : AppCompatActivity(), UserDataList {
             }
             R.id.navigation_notifications -> {
                 fragmentManager.beginTransaction().hide(active).show(followersFragment).commit()
-                active = userFragment
+                active = followersFragment
                 return@OnNavigationItemSelectedListener true
             }
         }
