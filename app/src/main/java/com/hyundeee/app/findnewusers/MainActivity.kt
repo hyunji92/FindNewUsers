@@ -72,7 +72,6 @@ class MainActivity : AppCompatActivity(), UserDataList {
             }
 
             override fun onQueryTextChange(query: String?): Boolean {
-                //query?.let { searchGithubUser(query) }
                 return false
             }
 
@@ -91,7 +90,6 @@ class MainActivity : AppCompatActivity(), UserDataList {
         fragmentManager.beginTransaction().add(R.id.main_container, followersFragment, "3").hide(followersFragment).commit()
         fragmentManager.beginTransaction().add(R.id.main_container, repoFragment, "2").hide(repoFragment).commit()
         fragmentManager.beginTransaction().add(R.id.main_container, userFragment, "1").commit()
-        //presenter.userData = this
     }
 
     override fun onDataLoaded(storeResponse: SearchResponse) {
