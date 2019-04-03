@@ -19,10 +19,10 @@ val apiModule: Module = module {
         }
 
         Retrofit.Builder()
+                .baseUrl("https://api.github.com")
                 .client(OkHttpClient.Builder().addInterceptor(loggingInterceptor).build())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
-                .baseUrl("https://api.github.com")
                 .build()
                 .create(GithubUserApiService::class.java)
     }

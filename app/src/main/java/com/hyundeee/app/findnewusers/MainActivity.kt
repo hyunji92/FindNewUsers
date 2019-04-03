@@ -11,7 +11,6 @@ import android.view.Menu
 import com.hyundeee.app.findnewusers.common.UserData
 import com.hyundeee.app.findnewusers.model.SearchResponse
 import com.hyundeee.app.findnewusers.presenter.MainPresenter
-import com.hyundeee.app.findnewusers.presenter.MainPresenterImpl
 import com.hyundeee.app.findnewusers.presenter.UserDataList
 import com.hyundeee.app.findnewusers.view.FollowersFragment
 import com.hyundeee.app.findnewusers.view.RepoFragment
