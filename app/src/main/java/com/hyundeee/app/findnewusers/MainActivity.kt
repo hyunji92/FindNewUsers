@@ -8,16 +8,15 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.SearchView
 import android.util.Log
 import android.view.Menu
-import com.hyundeee.app.findnewusers.model.SearchResponse
 import com.hyundeee.app.findnewusers.di.DaggerGithubUserListComponent
+import com.hyundeee.app.findnewusers.model.SearchResponse
+
 import com.hyundeee.app.findnewusers.di.GithubUserListModule
 import com.hyundeee.app.findnewusers.presenter.MainPresenter
 import com.hyundeee.app.findnewusers.view.FollowersFragment
 import com.hyundeee.app.findnewusers.view.RepoFragment
 import com.hyundeee.app.findnewusers.view.UserFragment
-import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_main.*
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), MainPresenter.View {
